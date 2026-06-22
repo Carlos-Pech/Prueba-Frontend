@@ -1,0 +1,186 @@
+<div class="p-6 bg-gray-100 min-h-screen font-sans">
+  <div class="flex justify-between items-center mb-5">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Productos</h1>
+      <p class="text-sm text-slate-500">Administra el inventario</p>
+    </div>
+
+    <button
+      (click)="openCreate()"
+      class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg font-semibold transition"
+    >
+      + Agregar producto
+    </button>
+  </div>
+
+  <!-- LOADING -->
+  <div *ngIf="loading()" class="text-center text-slate-600 mb-4">Cargando productos...</div>
+
+  <!-- ERROR -->
+  <div *ngIf="error()" class="text-center text-red-500 mb-4">
+    {{ error() }}
+  </div>
+
+  <!-- TABLE -->
+  <div class="bg-white rounded-xl shadow p-3 max-w-5xl mx-auto">
+    <table class="w-full border-collapse">
+      <thead class="bg-slate-100">
+        <tr class="text-left text-sm text-slate-600">
+          <th class="p-3">#</th>
+          <th class="p-3">Nombre</th>
+          <th class="p-3">Precio</th>
+          <th class="p-3">Stock</th>
+          <th class="p-3">Estado</th>
+          <th class="p-3">Fecha de registro</th>
+          <th class="p-3">Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngIf="products().length === 0">
+          <td colspan="7" class="text-center p-6 text-slate-500">No hay productos registrados</td>
+        </tr>
+        <tr *ngFor="let product of products()" class="border-t border-slate-200 hover:bg-slate-50">
+          <td class="p-3">{{ product.id }}</td>
+          <td class="p-3">{{ product.name }}</td>
+          <td class="p-3">${{ product.price }}</td>
+          <td class="p-3">{{ product.stock }}</td>
+
+          <td class="p-3">
+            <span
+              class="font-medium"
+              [ngClass]="product.isActive ? 'text-green-600' : 'text-red-600'"
+            >
+              {{ product.isActive ? 'Activo' : 'Inactivo' }}
+            </span>
+          </td>
+
+          <td class="p-3">
+            {{ product.createdAt | date: 'short' }}
+          </td>
+
+          <td class="p-3 flex gap-2">
+            <button
+              (click)="openEdit(product)"
+              [disabled]="!product.isActive"
+              title="No se puede editar un producto inactivo"
+              class="bg-sky-500 text-white px-3 py-1 rounded-md text-sm disabled:bg-slate-300 disabled:cursor-not-allowed"
+            >
+              Editar
+            </button>
+
+            <button
+              (click)="deleteProduct(product.id)"
+              class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded-md text-sm"
+            >
+              Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- MODAL -->
+  <div
+    *ngIf="showForm()"
+    (click)="closeForm()"
+    class="fixed inset-0 bg-black/40 flex items-center justify-center"
+  >
+    <div
+      (click)="$event.stopPropagation()"
+      class="bg-white p-6 rounded-xl w-[350px] shadow-lg space-y-4"
+    >
+      <h2 class="text-xl font-bold text-slate-800">
+        {{ editingId() ? 'Editar producto' : 'Crear producto' }}
+      </h2>
+
+      <!-- FORMULARIO -->
+      <form [formGroup]="form" class="space-y-3">
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1"> Nombre </label>
+
+          <input
+            type="text"
+            formControlName="name"
+            class="w-full border border-slate-300 p-2 rounded-md"
+            placeholder="Ej: Mouse gamer"
+          />
+
+          <div
+            *ngIf="form.get('name')?.invalid && form.get('name')?.touched"
+            class="text-red-500 text-sm mt-1"
+          >
+            <span *ngIf="form.get('name')?.errors?.['required']"> El nombre es obligatorio. </span>
+
+            <span *ngIf="form.get('name')?.errors?.['minlength']">
+              Debe tener al menos 3 caracteres.
+            </span>
+
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1"> Precio </label>
+
+          <input
+            type="number"
+            formControlName="price"
+            class="w-full border border-slate-300 p-2 rounded-md"
+          />
+
+          <div
+            *ngIf="form.get('price')?.invalid && form.get('price')?.touched"
+            class="text-red-500 text-sm mt-1"
+          >
+            <span *ngIf="form.get('price')?.errors?.['required']"> El precio es obligatorio. </span>
+
+            <span *ngIf="form.get('price')?.errors?.['min']">
+              El precio debe ser mayor que 0.
+            </span>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium text-slate-700 mb-1"> Stock </label>
+
+          <input
+            type="number"
+            formControlName="stock"
+            class="w-full border border-slate-300 p-2 rounded-md"
+          />
+
+          <div
+            *ngIf="form.get('stock')?.invalid && form.get('stock')?.touched"
+            class="text-red-500 text-sm mt-1"
+          >
+            <span *ngIf="form.get('stock')?.errors?.['required']"> El stock es obligatorio. </span>
+
+            <span *ngIf="form.get('stock')?.errors?.['min']">
+              El stock no puede ser negativo.
+            </span>
+          </div>
+        </div>
+      </form>
+
+      <!-- BOTONES -->
+      <div class="flex justify-end gap-2 pt-3">
+        <button
+          type="button"
+          (click)="closeForm()"
+          class="px-4 py-2 text-gray-600 hover:text-black"
+        >
+          Cancelar
+        </button>
+
+        <button
+          type="button"
+          (click)="save()"
+          class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md"
+        >
+          {{ editingId() ? 'Actualizar' : 'Guardar' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

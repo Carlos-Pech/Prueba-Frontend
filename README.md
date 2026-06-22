@@ -1,59 +1,102 @@
-# Frontend
+# Frontend - Sistema de Inventario
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.3.
+Este proyecto fue desarrollado con Angular y forma parte de un sistema de inventario con autenticación JWT y CRUD de productos.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🚀 Tecnologías utilizadas
+
+- Angular 20
+- TypeScript
+- HttpClient
+- Reactive Forms
+- Angular Router
+- Guards (AuthGuard / NoAuthGuard)
+- HTTP Interceptor (JWT)
+- Tailwind CSS
+
+---
+
+## Descripción del proyecto
+
+Aplicación frontend que permite:
+
+- Autenticación de usuarios mediante JWT
+- Protección de rutas privadas
+- Gestión completa de productos (CRUD)
+- Validaciones en formularios
+- Consumo de API REST
+
+---
+
+##  Autenticación
+
+- Login con usuario o correo + contraseña
+- El backend devuelve un token JWT
+- El token se guarda en `localStorage`
+- El token se envía automáticamente en cada request mediante un interceptor
+
+---
+
+##  Seguridad
+
+### AuthGuard
+Protege rutas como `/products` evitando acceso sin autenticación.
+
+### NoAuthGuard
+Evita que usuarios autenticados accedan al login.
+
+### HTTP Interceptor
+- Agrega el token JWT a las peticiones
+- Maneja errores 401 (Unauthorized)
+- Redirige al login si el token expira
+
+---
+
+##  Rutas principales
+
+- `/login` → inicio de sesión
+- `/products` → gestión de productos (protegido)
+- `/` → redirección automática
+
+---
+
+##  Funcionalidades
+
+- Login de usuario
+- Guardado de token JWT
+- Listado de productos
+- Crear producto
+- Editar producto
+- Eliminar producto
+- Validaciones en formularios
+
+---
+
+##  Validaciones
+
+- Nombre obligatorio
+- Precio mayor a 0
+- Stock no negativo
+- Validaciones en tiempo real
+
+---
+
+##  API consumida
+
+El frontend consume los siguientes endpoints:
+
+- POST `/api/auth/login`
+- GET `/api/products`
+- GET `/api/products/{id}`
+- POST `/api/products`
+- PUT `/api/products/{id}`
+- DELETE `/api/products/{id}`
+
+---
+
+##  Cómo ejecutar el proyecto
 
 ```bash
+npm install
 ng serve
-```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
