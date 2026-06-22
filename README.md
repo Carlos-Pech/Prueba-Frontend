@@ -16,6 +16,17 @@ Este proyecto fue desarrollado con Angular y forma parte de un sistema de invent
 - Tailwind CSS
 
 ---
+## Configuración del entorno
+
+Por defecto el proyecto está configurado para entorno de desarrollo:
+
+- Backend: http://localhost:5207
+- Frontend: http://localhost:4200
+- API URL: http://localhost:5207/api
+
+Si se utiliza Visual Studio con HTTPS, la URL puede cambiar a:
+- https://localhost:7181/api
+
 
 ## Descripción del proyecto
 
@@ -95,8 +106,22 @@ El frontend consume los siguientes endpoints:
 
 ---
 
-##  Cómo ejecutar el proyecto
+## 🚀 Cómo ejecutar el proyecto
 
-```bash
-npm install
-ng serve
+- Clonar el repositorio:
+  git clone https://github.com/Carlos-Pech/Prueba-Frontend.git
+
+- Entrar a la carpeta del proyecto:
+  cd frontend
+
+- Abrir en VS Code:
+  code .
+
+- Instalar dependencias:
+  npm install
+
+- Ejecutar el proyecto:
+  ng serve
+
+## 🌐 Acceder a la aplicación:
+http://localhost:4200
