@@ -14,7 +14,6 @@ import { signal } from '@angular/core';
   styleUrl: './login.css',
 })
 export class Login {
-
   loginForm: FormGroup;
 
   loading = false;
@@ -35,6 +34,7 @@ export class Login {
   onSubmit() {
     this.submitted = true;
     this.errorMessage.set('');
+    // Evita enviar el formulario si es inválido
 
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -46,6 +46,8 @@ export class Login {
     this.authService.login(this.loginForm.value as LoginRequest).subscribe({
       next: (res: LoginResponse) => {
         this.loading = false;
+
+        // Guarda el JWT y redirige al módulo de productos
         this.authService.saveToken(res.token);
         this.router.navigate(['/products'], { replaceUrl: true });
         console.log('Login exitoso', res);

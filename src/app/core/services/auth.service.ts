@@ -4,6 +4,10 @@ import { LoginRequest } from '../../features/auth/models/loginRequest.model';
 import { LoginResponse } from '../../features/auth/models/loginResponse.models';
 import { environment } from '../../../environments/environment';
 
+/**
+ * Servicio encargado de gestionar la autenticación del usuario:
+ * inicio de sesión, almacenamiento y eliminación del JWT.
+ */
 @Injectable({
   providedIn: 'root',
 })

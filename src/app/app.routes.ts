@@ -5,19 +5,21 @@ export const routes: Routes = [
   {
     path: 'login',
     canActivate: [noAuthGuard],
-    loadComponent: () =>
-      import('./features/auth/pages/login/login').then(m => m.Login)
+    // Lazy loading del componente de login para optimizar carga inicial
+    loadComponent: () => import('./features/auth/pages/login/login').then((m) => m.Login),
   },
   {
     path: 'products',
     canActivate: [authGuard],
+    // Ruta protegida: solo accesible con autenticación
+    // Lazy loading para cargar el módulo bajo demanda
     loadComponent: () =>
-      import('./features/products/pages/product/productPage').then(m => m.ProductPage )
+      import('./features/products/pages/product/productPage').then((m) => m.ProductPage),
     // loadComponent Carga bajo demanda.
   },
   {
     path: '',
     redirectTo: 'products',
-    pathMatch: 'full'
-  }
+    pathMatch: 'full',
+  },
 ];

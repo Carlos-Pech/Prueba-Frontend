@@ -18,7 +18,7 @@ export class ProductPage implements OnInit {
   private productService = inject(ProductService);
   private fb = inject(FormBuilder);
 
-  //STATE (Signals - UI State)
+  // Estado reactivo de la UI usando Signals
   products = signal<ProductResponse[]>([]);
   loading = signal(false);
   error = signal('');
@@ -32,7 +32,7 @@ export class ProductPage implements OnInit {
     this.loadProducts();
   }
 
-  // 🧠 FORM
+  // Inicializa el formulario reactivo con validaciones
   initForm(): void {
     this.form = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
@@ -40,9 +40,8 @@ export class ProductPage implements OnInit {
       stock: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]],
     });
   }
-  //validator
 
-  //HELPERS
+  // Helpers para centralizar cambios de estado de UI
   private setLoading(value: boolean): void {
     this.loading.set(value);
   }
@@ -51,7 +50,6 @@ export class ProductPage implements OnInit {
     this.error.set(message);
   }
 
-  //GET PRODUCTS
   loadProducts(): void {
     this.setLoading(true);
 
@@ -67,7 +65,6 @@ export class ProductPage implements OnInit {
     });
   }
 
-  //OPEN FORM
   openCreate(): void {
     this.showForm.set(true);
     this.editingId.set(null);
@@ -75,13 +72,15 @@ export class ProductPage implements OnInit {
     this.error.set('');
   }
 
-  //CLOSE FORM
   closeForm(): void {
     this.showForm.set(false);
     this.editingId.set(null);
     this.form.reset();
   }
-  //CREATE PRODUCT
+  /**
+   * Guarda un producto.
+   * Si existe editingId => actualiza, si no => crea nuevo.
+   */
   save(): void {
     if (this.form.invalid) {
       this.form.markAllAsTouched();
@@ -95,6 +94,8 @@ export class ProductPage implements OnInit {
     };
 
     const id = this.editingId();
+    // Decide si es creación o actualización
+
     if (id) {
       this.productService.updateProduct(id, product).subscribe({
         next: () => {
@@ -118,7 +119,7 @@ export class ProductPage implements OnInit {
     }
   }
 
-  //DELETE LOGICO
+  // Eliminación lógica: marca el producto como inactivo en la UI
   deleteProduct(id: number): void {
     this.products.update((list) => list.map((p) => (p.id === id ? { ...p, isActive: false } : p)));
 
