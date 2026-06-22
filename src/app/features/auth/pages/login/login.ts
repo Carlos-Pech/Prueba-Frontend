@@ -5,18 +5,21 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 import { LoginRequest } from '../../models/loginRequest.model';
 import { LoginResponse } from '../../models/loginResponse.models';
 import { Router } from '@angular/router';
-
+import { signal } from '@angular/core';
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.html',
   styleUrl: './login.css',
 })
 export class Login {
+
   loginForm: FormGroup;
+
   loading = false;
-  errorMessage = '';
   submitted = false;
+  errorMessage = signal('');
 
   constructor(
     private fb: FormBuilder,
@@ -31,6 +34,7 @@ export class Login {
 
   onSubmit() {
     this.submitted = true;
+    this.errorMessage.set('');
 
     if (this.loginForm.invalid) {
       this.loginForm.markAllAsTouched();
@@ -38,19 +42,19 @@ export class Login {
     }
 
     this.loading = true;
-    this.errorMessage = '';
 
     this.authService.login(this.loginForm.value as LoginRequest).subscribe({
       next: (res: LoginResponse) => {
         this.loading = false;
         this.authService.saveToken(res.token);
-        this.router.navigate(['/products'],{replaceUrl:true})
+        this.router.navigate(['/products'], { replaceUrl: true });
         console.log('Login exitoso', res);
       },
+
       error: (err) => {
         this.loading = false;
-        this.errorMessage = 'Credenciales inválidas';
-        console.log('ERROR ', err);
+        console.log('ERROR LOGIN:', err);
+        this.errorMessage.set('Correo o contraseña inválidos');
       },
     });
   }

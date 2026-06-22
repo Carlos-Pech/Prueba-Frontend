@@ -116,7 +116,6 @@
             <span *ngIf="form.get('name')?.errors?.['minlength']">
               Debe tener al menos 3 caracteres.
             </span>
-
           </div>
         </div>
 
@@ -147,6 +146,7 @@
           <input
             type="number"
             formControlName="stock"
+            step="1"
             class="w-full border border-slate-300 p-2 rounded-md"
           />
 
@@ -158,6 +158,9 @@
 
             <span *ngIf="form.get('stock')?.errors?.['min']">
               El stock no puede ser negativo.
+            </span>
+            <span *ngIf="form.get('stock')?.errors?.['pattern']">
+              El stock debe ser un número entero.
             </span>
           </div>
         </div>

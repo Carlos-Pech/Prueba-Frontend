@@ -35,9 +35,9 @@ export class ProductPage implements OnInit {
   // 🧠 FORM
   initForm(): void {
     this.form = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3),]],
+      name: ['', [Validators.required, Validators.minLength(3)]],
       price: [null, [Validators.required, Validators.min(0.01)]],
-      stock: [null, [Validators.required, Validators.min(0)]],
+      stock: [null, [Validators.required, Validators.min(0), Validators.pattern(/^\d+$/)]],
     });
   }
   //validator
@@ -111,6 +111,7 @@ export class ProductPage implements OnInit {
         },
         error: (err) => {
           console.error(err);
+          alert(err.error?.message || 'Error al crear producto');
           this.setError('Error al crear producto');
         },
       });
